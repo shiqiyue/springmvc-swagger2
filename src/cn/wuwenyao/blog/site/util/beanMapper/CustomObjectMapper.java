@@ -3,7 +3,7 @@
  *
  * 
  *******************************************************************************/
-package cn.wuwenyao.blog.util.beanMapper;
+package cn.wuwenyao.blog.site.util.beanMapper;
 
 import java.io.IOException;
 
@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
- * 自定义jackson 对象 映射（增�? xss过滤�?
+ * 自定义jackson 对象 映射（增�? xss过滤�?
  * 
- * @author lll 2015�?2�?5�?
+ * @author lll 2015�?2�?5�?
  */
 public class CustomObjectMapper extends ObjectMapper {
 	private static final long serialVersionUID = -3448961813323784217L;
@@ -38,8 +38,8 @@ public class CustomObjectMapper extends ObjectMapper {
 	}
 	
 	/**
-	 * json String 自定义反序列化（htmlEscape�?
-	 * @author lll 2015�?2�?5�?
+	 * json String 自定义反序列化（htmlEscape�?
+	 * @author lll 2015�?2�?5�?
 	 */
 	class JsonHtmlXssDeserializer extends JsonDeserializer<String> {
 
@@ -53,8 +53,8 @@ public class CustomObjectMapper extends ObjectMapper {
 	}
 
 	/**
-	 * json String 自定义序列化（htmlUnescape�?
-	 * @author lll 2015�?2�?5�?
+	 * json String 自定义序列化（htmlUnescape�?
+	 * @author lll 2015�?2�?5�?
 	 */
 	class JsonHtmlXssSerializer extends JsonSerializer<String> {
 
