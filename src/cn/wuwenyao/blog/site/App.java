@@ -12,6 +12,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import cn.wuwenyao.blog.config.RootContextConfig;
+import cn.wuwenyao.blog.config.RootContextConfiguration;
 import cn.wuwenyao.blog.config.WebConfig;
 
 /***
@@ -27,7 +28,7 @@ public class App implements WebApplicationInitializer {
 		
 		//应用程序的根上下文配置
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-		rootContext.register(RootContextConfig.class);
+		rootContext.register(RootContextConfiguration.class);
 		container.addListener(new ContextLoaderListener(rootContext));
 		
 		//web的根上下文配置
