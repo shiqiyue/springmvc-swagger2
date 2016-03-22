@@ -22,14 +22,17 @@ import cn.wuwenyao.blog.config.WebConfiguration;
 public class App implements WebApplicationInitializer {
 	@Override
 	public void onStartup(ServletContext container) throws ServletException {
-		//静态内容配置到default的servlet处理
-		container.getServletRegistration("default").addMapping("/static/*");
+		/**********************listener配置**************************/
 		
 		//应用程序的根上下文配置
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		rootContext.register(RootContextConfiguration.class);
 		container.addListener(new ContextLoaderListener(rootContext));
 		
+		/**********************servlet配置**************************/
+		
+		//静态内容配置到default的servlet处理
+		container.getServletRegistration("default").addMapping("/static/*");
 		//web的根上下文配置
 		AnnotationConfigWebApplicationContext mvcContext = new AnnotationConfigWebApplicationContext();
 		mvcContext.register(WebConfiguration.class);
@@ -38,6 +41,7 @@ public class App implements WebApplicationInitializer {
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/");
 		
+		/**********************filter配置**************************/
 		//编码格式化过滤器
 		FilterRegistration.Dynamic encodingFilter = container.addFilter("encodingFilter", 
 				new CharacterEncodingFilter("UTF-8", true));
