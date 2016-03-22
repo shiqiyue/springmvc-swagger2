@@ -42,6 +42,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+/***
+ * {@link Configuration},标志这是一个spring的配置
+ * {@link EnableScheduling},启用spring定时任务功能，实现{@link SchedulingConfigurer}可以具体配置
+ * {@link EnableAsync},启用spring的异步任务功能，实现{@link AsyncConfigurer}可以具体配置
+ * {@link EnableTransactionManagement}
+ * {@link EnableJpaRepositories}，启用spring data jpa仓库
+ * {@link ComponentScan}，扫描包，获取Bean
+ * {@link ImportResource}，导入xml配置的bean
+ * @author 文尧
+ *
+ */
 @Configuration
 @EnableScheduling
 @EnableAsync(mode = AdviceMode.PROXY, proxyTargetClass = false, order = Ordered.HIGHEST_PRECEDENCE)
@@ -52,34 +63,29 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @ImportResource(locations="classPath:datasource.xml")
 public class RootContextConfiguration implements AsyncConfigurer, SchedulingConfigurer,ApplicationContextAware {
 	private static final Logger log = LoggerFactory.getLogger(RootContextConfiguration.class);
-	private static final Logger schedulingLogger = LoggerFactory.getLogger(log.getName() + ".[scheduling]");
+	private static final Logger schedulingLogger = LoggerFactory.getLogger("scheduling");
+	private static final Logger asyncLogger = LoggerFactory.getLogger("async");
 	private ApplicationContext applicationContext;
 	private static final String webBasePackage = "cn.wuwenyao.blog.site";
 	private static final String entityPackage = webBasePackage + ".entity";
-	/*@Bean
-	public MessageSource messageSource() {
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		messageSource.setCacheSeconds(-1);
-		messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
-		messageSource.setBasenames("/WEB-INF/i18n/titles", "/WEB-INF/i18n/messages", "/WEB-INF/i18n/errors",
-				"/WEB-INF/i18n/validation");
-		return messageSource;
-	}*/
+	
 
+	/**
+	 * 实体验证
+	 * @return
+	 */
 	@Bean
 	public LocalValidatorFactoryBean localValidatorFactoryBean() {
 		LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-/*		validator.setValidationMessageSource(this.messageSource());
-*/		return validator;
+		return validator;
 	}
 
-	/*@Bean
-	public MethodValidationPostProcessor methodValidationPostProcessor() {
-		MethodValidationPostProcessor processor = new MethodValidationPostProcessor();
-		processor.setValidator(this.localValidatorFactoryBean());
-		return processor;
-	}*/
+	
 
+	/***
+	 * 
+	 * @return
+	 */
 	@Bean
 	public ObjectMapper objectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
@@ -89,6 +95,10 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 		return mapper;
 	}
 
+	/***
+	 * xml实体支持
+	 * @return
+	 */
 	@Bean
 	public Jaxb2Marshaller jaxb2Marshaller() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
@@ -96,13 +106,12 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 		return marshaller;
 	}
 
-	/*@Bean
-	public DataSource springJpaDataSource() {
-		org.apache.tomcat.jdbc.pool.DataSource datasource = new org.apache.tomcat.jdbc.pool.DataSource(new )
-		JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-		return lookup.getDataSource("jdbc/SpringJpa");
-	}*/
+	
 
+	/***
+	 * spring jpa 实体管理工厂
+	 * @return
+	 */
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 		Map<String, Object> properties = new Hashtable<>();
@@ -121,11 +130,19 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 		return factory;
 	}
 
+	/***
+	 * spring jpa 事务管理
+	 * @return
+	 */
 	@Bean
 	public PlatformTransactionManager jpaTransactionManager() {
 		return new JpaTransactionManager(this.entityManagerFactoryBean().getObject());
 	}
 
+	/***
+	 * 任务的线程池
+	 * @return
+	 */
 	@Bean
 	public ThreadPoolTaskScheduler taskScheduler() {
 		log.info("Setting up thread pool task scheduler with 20 threads.");
@@ -140,6 +157,9 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 		return scheduler;
 	}
 
+	/***
+	 * 异步任务的执行器
+	 */
 	@Override
 	public Executor getAsyncExecutor() {
 		Executor executor = this.taskScheduler();
@@ -147,6 +167,9 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 		return executor;
 	}
 
+	/***
+	 * 定时任务的执行器
+	 */
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar registrar) {
 		TaskScheduler scheduler = this.taskScheduler();
@@ -154,6 +177,9 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 		registrar.setTaskScheduler(scheduler);
 	}
 
+	/***
+	 * 异步执行错误处理
+	 */
 	@Override
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
 		// TODO Auto-generated method stub
@@ -161,12 +187,15 @@ public class RootContextConfiguration implements AsyncConfigurer, SchedulingConf
 			
 			@Override
 			public void handleUncaughtException(Throwable ex, Method method, Object... params) {
-				schedulingLogger.error(ex.getMessage());
+				asyncLogger.error(ex.getMessage());
 				
 			}
 		};
 	}
 
+	/***
+	 * 注入applicationContext
+	 */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;

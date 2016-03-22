@@ -11,9 +11,8 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import cn.wuwenyao.blog.config.RootContextConfig;
 import cn.wuwenyao.blog.config.RootContextConfiguration;
-import cn.wuwenyao.blog.config.WebConfig;
+import cn.wuwenyao.blog.config.WebConfiguration;
 
 /***
  * web应用程序初始化，相当于web.xml
@@ -33,7 +32,7 @@ public class App implements WebApplicationInitializer {
 		
 		//web的根上下文配置
 		AnnotationConfigWebApplicationContext mvcContext = new AnnotationConfigWebApplicationContext();
-		mvcContext.register(WebConfig.class);
+		mvcContext.register(WebConfiguration.class);
 		ServletRegistration.Dynamic dispatcher = container.addServlet("springDispatcher",
 				new DispatcherServlet(mvcContext));
 		dispatcher.setLoadOnStartup(1);
