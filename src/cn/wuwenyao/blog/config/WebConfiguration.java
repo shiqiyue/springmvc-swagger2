@@ -50,7 +50,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cn.wuwenyao.blog.site.App;
+import cn.wuwenyao.blog.App;
 
 /***
  * spring web端配置

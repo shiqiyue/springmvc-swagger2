@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MainController {
 	
 	@RequestMapping("/")
-	@ResponseBody
 	public String main(){
+		System.out.println("main");
 		return "main";
 	}
 

@@ -1,4 +1,4 @@
-package cn.wuwenyao.blog.site;
+package cn.wuwenyao.blog;
 
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
