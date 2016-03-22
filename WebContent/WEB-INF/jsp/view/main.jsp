@@ -5,6 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="blog" uri="http://www.wuwenyao.cn/blog/tld"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,4 +15,5 @@
 hello world!!!
 <a href="<c:url value='/test/t1?info=hello'></c:url>">带参数的test</a>
 <a href="<c:url value='/test/t2'></c:url>">不带参数的test</a>
+<a href="<c:url value='/user/save'></c:url>">添加用户</a>
 </body>
