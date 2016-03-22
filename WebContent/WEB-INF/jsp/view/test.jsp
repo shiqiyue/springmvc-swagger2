@@ -11,7 +11,5 @@
 <title>main</title>
 </head>
 <body>
-hello world!!!
-<a href="<c:url value='/test/t1?info=hello'></c:url>">带参数的test</a>
-<a href="<c:url value='/test/t2'></c:url>">不带参数的test</a>
+${info }
 </body>
